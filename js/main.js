@@ -1,6 +1,11 @@
 const form = document.getElementById("novoItem");
 const lista = document.getElementById("lista");
-const itens = [];
+const itens = JSON.parse(localStorage.getItem("itens")) || [];
+//parse porque itens está recebendo uma string e agora eu quero um objeto
+
+itens.forEach( (elemento ) => {
+    criarElemento(elemento);
+}) 
 
 form.addEventListener("submit", (evento) => {
     evento.preventDefault(); //interrompe o comportamento padrão do formulário
@@ -8,36 +13,32 @@ form.addEventListener("submit", (evento) => {
     const name = evento.target.elements['nome'];
     const qtd = evento.target.elements['quantidade'];
 
-    criarElemento(name.value, qtd.value);
+    const itemAtual = {
+        "nome" : name.value,
+        "quantidade": qtd.value,
+    }
+
+    criarElemento(itemAtual);    
+   
+    itens.push(itemAtual);
+
+    localStorage.setItem("itens", JSON.stringify(itens));
 
     name.value = "";
     qtd.value = "";
   
 })
 
-function criarElemento(nome, quantidade) {
+function criarElemento(item) {
     const newItem = document.createElement('li');
     newItem.classList.add('item');
 
     const numeroItem = document.createElement('strong');
-    numeroItem.innerHTML = quantidade;
+    numeroItem.innerHTML = item.quantidade;
 
     newItem.appendChild(numeroItem);
-    newItem.innerHTML += nome;
+    newItem.innerHTML += item.nome;
 
     lista.appendChild(newItem);
-
-    
-    localStorage.setItem("nome", nome);
-    localStorage.setItem("quantidade", quantidade);
-    
-    const itemAtual = {
-        "nome" : nome,
-        "quantidade": quantidade
-    }
-
-    itens.push(itemAtual);
-
-    localStorage.setItem("item", JSON.stringify(itens));
 }
 
