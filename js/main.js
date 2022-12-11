@@ -18,9 +18,21 @@ form.addEventListener("submit", (evento) => {
         "quantidade": qtd.value,
     }
 
-    criarElemento(itemAtual);    
+    const existe = itens.find( (elemento) => elemento.nome === name.value);
+
+    if(existe) {
+        itemAtual.id = existe.id;
+
+        atualizaElemento(itemAtual);
+    }
+    else {
+        itemAtual.id = itens.length;
+
+        criarElemento(itemAtual);    
    
-    itens.push(itemAtual);
+        itens.push(itemAtual);
+    }
+
 
     localStorage.setItem("itens", JSON.stringify(itens));
 
@@ -35,6 +47,7 @@ function criarElemento(item) {
 
     const numeroItem = document.createElement('strong');
     numeroItem.innerHTML = item.quantidade;
+    numeroItem.dataset.id = item.id;
 
     newItem.appendChild(numeroItem);
     newItem.innerHTML += item.nome;
@@ -42,3 +55,6 @@ function criarElemento(item) {
     lista.appendChild(newItem);
 }
 
+function atualizaElemento(item) {
+    document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
+}
